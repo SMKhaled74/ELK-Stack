@@ -186,7 +186,7 @@ SSH into the control node and follow the steps below:
 	![#1106](./Files/%231106.png)
 	![#1806](./Files/%231806.png)
 
-	- Run the [playbook](./Files/filebeat-playbook.yml), and navigate to [http://20.70.27.244:5601](./Files/FileBeat%20.png) (ELK-VM public IP) to check that the installation worked as expected.
+	- Run the [playbook](./Files/filebeat-playbook.yml), and navigate to [http://20.70.27.244:5601](./Files/FileBeat%20.png) (screen shot) to check that the installation worked as expected.
 
 - #### Metricbeat
 
@@ -196,7 +196,7 @@ SSH into the control node and follow the steps below:
 	![#62](./Files/%2362.png)
 	![#96](./Files/%2396.png)
 
-	- Run the [playbook](./Files/metricbeat-playbook.yml), and navigate to [http://20.70.27.244:5601](./Files/Metricbeat.png) (ELK-VM public IP) to check that the installation worked as expected.
+	- Run the [playbook](./Files/metricbeat-playbook.yml), and navigate to [http://20.70.27.244:5601](./Files/Metricbeat.png) (screen shot) to check that the installation worked as expected.
 
 
 
