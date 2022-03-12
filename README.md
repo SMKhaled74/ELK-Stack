@@ -9,9 +9,9 @@ The files in this repository were used to configure the network depicted below.
 
 These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the config file may be used to install only certain pieces of it, such as Filebeat.
 
-   [filebeat-playbook.yml](./files/filebeat-playbook.yml) 
+   [filebeat-playbook.yml](./Files/filebeat-playbook.yml) 
    
-   [filebeat-configuration.yml](./files/filebeat-config.yml) 
+   [filebeat-configuration.yml](./Files/filebeat-config.yml) 
 
 This document contains the following details:
 - Description of the Topology
