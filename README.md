@@ -228,6 +228,7 @@ To test our newly setup ELK server the following task has been performed :
 
 	```sudo stress --cpu 1```
 
+	Metrix data
 
 ![CPU stress](./Images/kibana%20dashboard-CPU%20usage.png)
 
@@ -244,7 +245,7 @@ To test our newly setup ELK server the following task has been performed :
 	Example of wget command 
 	![wget example](./Images/wget%20dos.png)
 
-	We can see Load and Metrics of the web servers were hit.
+	We can see below Load and Metrics of the web servers were hit.
 
 ![Load hit image](./Images/wget%20output1.png)
 
