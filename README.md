@@ -3,15 +3,15 @@
 
 The files in this repository were used to configure the network depicted below.
 
-![Project 1 Red-Team Network Diagram](./Files/ELK%20Deployment%20-%20thumb.png)
+![Project 1 Red-Team Network Diagram](./Diagram/ELK%20Deployment%20-%20thumb.png)
 
-*[click here to view in full](./Files/ELK%20Deployment.png)*
+*[click here to view in full](./Diagram/ELK%20Deployment.png)*
 
 These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the config file may be used to install only certain pieces of it, such as Filebeat.
 
-   [filebeat-playbook.yml](./Files/filebeat-playbook.yml) 
+   [filebeat-playbook.yml](./Ansible/filebeat-playbook.yml) 
    
-   [filebeat-configuration.yml](./Files/filebeat-config.yml) 
+   [filebeat-configuration.yml](./Ansible/filebeat-config.yml) 
 
 This document contains the following details:
 - Description of the Topology
@@ -117,7 +117,7 @@ The playbook implements the following tasks:
 
 		``sudo systemctl status docker``
 
-	![Docker Service Status](./Files/Docker%20Service%20Status.png)
+	![Docker Service Status](./Images/Docker%20Service%20Status.png)
 	- Once Docker is installed, pull the container ``cyberxsecurity/ansible``
 
 		``sudo docker pull cyberxsecurity/ansible``
@@ -130,21 +130,21 @@ The playbook implements the following tasks:
 
 	- Add new ELK VM to the Ansible ``hosts`` file
 	
-	![Ansible hosts file](./Files/Add_VM_Ansible_hosts.png)
+	![Ansible hosts file](./Images/Add_VM_Ansible_hosts.png)
 
 	- Create a new Ansible playbook to use for new ELK VM.
 
-	[Ansible playbook for ELK VM](./Files/elk.yml)
+	[Ansible playbook for ELK VM](./Ansible/elk.yml)
 
 	- Run the Ansible playbook to install ELK
 
 	``ansible-playbook /etc/ansible/elk.yml``
 
-	![Run Ansible playbook](./Files/Run_elk_playbook.png)
+	![Run Ansible playbook](./Images/Run_elk_playbook.png)
 	
 The following screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.
 
-![ELK-VM Docker PS](./Files/ELK_Docker_PS.png)
+![ELK-VM Docker PS](./Images/ELK_Docker_PS.png)
 
 ### Target Machines & Beats
 This ELK server is configured to monitor the following machines:
@@ -157,8 +157,8 @@ This ELK server is configured to monitor the following machines:
 
 - We have installed the following Beats on these machines:
 
-	- [Filebeat (Status Screenshot)](./Files/FileBeat%20.png)
-	- [Metricbeat (Status Screenshot)](./Files/Metricbeat.png)
+	- [Filebeat (Status Screenshot)](./Images/FileBeat.png)
+	- [Metricbeat (Status Screenshot)](./Images/Metricbeat.png)
 
 - These Beats allow us to collect the following information from each machine:
 	
@@ -180,23 +180,75 @@ SSH into the control node and follow the steps below:
 
 - #### Filebeat
 
-	- Download the [filebeat-configuration.yml](./Files/filebeat-config.yml) file to ```/etc/ansible/``` directory.
-	- Update the [filebeat-configuration.yml](./Files/filebeat-config.yml) file to include the ELK VM's private IP (10.0.0.4) in lines #1106 and #1806.
+	- Download the [filebeat-configuration.yml](./Ansible/filebeat-config.yml) file to ```/etc/ansible/``` directory.
+	- Update the [filebeat-configuration.yml](./Ansible/filebeat-config.yml) file to include the ELK VM's private IP (10.0.0.4) in lines #1106 and #1806.
 
-	![#1106](./Files/%231106.png)
-	![#1806](./Files/%231806.png)
+	![#1106](./Images/%231106.png)
+	![#1806](./Images/%231806.png)
 
-	- Run the [playbook](./Files/filebeat-playbook.yml), and navigate to [http://20.70.27.244:5601](./Files/FileBeat%20.png) (screen shot) to check that the installation worked as expected.
+	- Run the [playbook](./Ansible/filebeat-playbook.yml), and navigate to [http://20.70.27.244:5601](./Images/FileBeat.png) (screen shot) to check that the installation worked as expected.
 
 - #### Metricbeat
 
-	- Download the [metricbeat-configuration.yml](./Files/metricbeat-config.yml) file to ```/etc/ansible/``` direcorty.
-	- Update the [metricbeat-configuration.yml](./Files/metricbeat-config.yml) file to include the ELK VM's private IP (10.0.0.4) in lines #62 and #96.
+	- Download the [metricbeat-configuration.yml](./Ansible/metricbeat-config.yml) file to ```/etc/ansible/``` direcorty.
+	- Update the [metricbeat-configuration.yml](./Ansible/metricbeat-config.yml) file to include the ELK VM's private IP (10.0.0.4) in lines #62 and #96.
 
-	![#62](./Files/%2362.png)
-	![#96](./Files/%2396.png)
+	![#62](./Images/%2362.png)
+	![#96](./Images/%2396.png)
 
-	- Run the [playbook](./Files/metricbeat-playbook.yml), and navigate to [http://20.70.27.244:5601](./Files/Metricbeat.png) (screen shot) to check that the installation worked as expected.
+	- Run the [playbook](./Ansible/metricbeat-playbook.yml), and navigate to [http://20.70.27.244:5601](./Images/Metricbeat.png) (screen shot) to check that the installation worked as expected.
+
+### Using Kibana
+After setting up an ELK server we need to verify that ELK server is working as expected and pulling both logs and metrics from the pen-testing web servers.
+
+To test our newly setup ELK server the following task has been performed :
+-	#### SSH Barrage :
+	To perform this task a high amount of failed SSH login had been generated and verified that Kibana is picking up this activity.
+
+	Bash script to generate huge number of login attempts accross all 3 webservers :
+	
+			while true
+			do for i in {5..7}
+				do ssh nouser@10.1.0.$i
+				done
+			done
+	*Note : This loop will continue to run until stop it using ```CTRL + C``` and will create thousands of login attempts.*
+
+	![Failed SSH login](./Images/failed%20ssh%20login.png)
+
+	Kibana logs
+
+	![kibana logs](./Images/kibana%20dashboard-failed%20login.png)
+
+
+-	#### Linux Stress
+	To perform this task we installed stress program in to each web servers and run it using the following commands :
+
+	```sudo apt install stress```
+
+	```sudo stress --cpu 1```
+
+
+![CPU stress](./Images/kibana%20dashboard-CPU%20usage.png)
+
+![CPU stress all](./Images/kibana%20dashboard-CPU%20usage%20all.png)
+
+
+-	#### wget-DoS
+	For this test we generated a high number of web request to our pen-testing servers and make sure Kibana is picking them up.
+
+	command ```while true;do for i in {5..7}; do wget -0 /dev/null 10.1.0.$i;done;done;```
+
+	*Note : This loop will continue to run until stop it using ```CTRL + C``` and will create thousands of web requests.*
+
+	Example of wget command 
+	![wget example](./Images/wget%20dos.png)
+
+	We can see Load and Metrics of the web servers were hit.
+
+![Load hit image](./Images/wget%20output1.png)
+
+![Load hit image](./Images/wget%20output2.png)
 
 
 
@@ -211,11 +263,11 @@ SSH into the control node and follow the steps below:
 
 		```https://gist.githubusercontent.com/slape/5cc350109583af6cbe577bbcc0710c93/raw/eca603b72586fbe148c11f9c87bf96a63cb25760/Filebeat > /etc/ansible/filebeat-config.yml```
 
-		![Filebeat config](./Files/download%20filebeat%20config.png)
+		![Filebeat config](./Images/download%20filebeat%20config.png)
 
-		- Run ```nano /etc/ansible/filebeat-config.yml``` to update the [filebeat-configuration](./Files/filebeat-config.yml) file.
+		- Run ```nano /etc/ansible/filebeat-config.yml``` to update the [filebeat-configuration](./Ansible/filebeat-config.yml) file.
 
-	- To create the [filebeat playbook](./Files/filebeat-playbook.yml) : ```nano /etc/ansible/filebeat-playbook.yml```
+	- To create the [filebeat playbook](./Ansible/filebeat-playbook.yml) : ```nano /etc/ansible/filebeat-playbook.yml```
 	
 	- Command to run the playbook :  ```ansible-playbook /etc/ansible/filebeat-playbook.yml```
       
@@ -227,10 +279,10 @@ SSH into the control node and follow the steps below:
 
 		```https://gist.githubusercontent.com/slape/58541585cc1886d2e26cd8be557ce04c/raw/0ce2c7e744c54513616966affb5e9d96f5e12f73/metricbeat > /etc/ansible/metricbeat-config.yml```
 
-		![Metricbeat config](./Files/download%20metricbeat%20config.png)
+		![Metricbeat config](./Images/download%20metricbeat%20config.png)
 
-		- Run ```nano /etc/ansible/metricbeat-config.yml``` to update the [metricbeat-configuration](./Files/metricbeat-config.yml) file.
+		- Run ```nano /etc/ansible/metricbeat-config.yml``` to update the [metricbeat-configuration](./Ansible/metricbeat-config.yml) file.
 
-	- To create the [metricbeat playbook](./Files/metricbeat-playbook.yml) : ```nano /etc/ansible/metricbeat-playbook.yml```
+	- To create the [metricbeat playbook](./Ansible/metricbeat-playbook.yml) : ```nano /etc/ansible/metricbeat-playbook.yml```
 	
 	- Command to run the playbook :  ```ansible-playbook /etc/ansible/metricbeat-playbook.yml```
